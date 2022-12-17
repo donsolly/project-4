@@ -1,0 +1,309 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>School - Dashboard</title>
+
+  <!-- Custom fonts for this template-->
+  <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+ <!--  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script> -->
+
+  <!-- Custom styles for this template-->
+  <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+
+    <!-- Sidebar -->
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+      <!-- Sidebar - Brand -->
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+        <div class="sidebar-brand-icon rotate-n-15">
+          <i class="fas fa-laugh-wink"></i>
+        </div>
+        <div class="sidebar-brand-text mx-3">School <sup>io</sup></div>
+      </a>
+
+      <!-- Divider -->
+      <hr class="sidebar-divider my-0">
+
+      <!-- Nav Item - Dashboard -->
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'index' %}">
+          <i class="fas fa-fw fa-tachometer-alt"></i>
+          <span>Dashboard</span></a>
+      </li>
+
+      <!-- Divider -->
+      <hr class="sidebar-divider">
+
+      <!-- Heading -->
+      <div class="sidebar-heading">
+        Pages
+      </div>
+
+      <!-- Nav Item - Pages Collapse Menu -->
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'courses' %}">
+          <i class="fas fa-fw fa-chart-area"></i>
+          <span>Register Courses</span></a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="{% url 'sem_courses' %}">
+          <i class="fas fa-fw fa-chart-area"></i>
+          <span>View Registered Course</span></a>
+      </li>
+
+      
+
+      <!-- Divider -->
+      <hr class="sidebar-divider d-none d-md-block">
+
+      <!-- Sidebar Toggler (Sidebar) -->
+      <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+      </div>
+
+    </ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+        <!-- Topbar -->
+        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+          <!-- Sidebar Toggle (Topbar) -->
+          <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+            <i class="fa fa-bars"></i>
+          </button>
+
+          <!-- Topbar Search -->
+          <!-- <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"> -->
+            <div class="input-group">
+              <h3>{{ user.last_name }} {{ user.first_name }}</h3>
+            </div>
+          <!-- </form> -->
+
+          <!-- Topbar Navbar -->
+          <ul class="navbar-nav ml-auto">
+
+            <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+            <li class="nav-item dropdown no-arrow d-sm-none">
+              
+            </li>
+
+            
+            
+
+            <div class="topbar-divider d-none d-sm-block"></div>
+
+            <!-- Nav Item - User Information -->
+            <li class="nav-item dropdown no-arrow">
+              <a class="nav-link" href="{% url 'logout' %}" role="button">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Logout</span>
+                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+              </a>
+              
+            </li>
+
+          </ul>
+
+        </nav>
+        <!-- End of Topbar -->
+
+               <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Page Heading -->
+          <h1 class="h3 mb-2 text-gray-800">{{ matric }}</h1>
+          <p class="mb-4"> View all the courses you have registered for</p>
+
+          <!-- DataTales Example -->
+          <div class="card shadow mb-4">
+            <div class="card-header py-3">
+              <button class="btn btn-danger btn-icon-split" id="toPDF"> <span class="icon text-white-50"><i class="fas fa-check"></i></span><span class="text" style="color:white;">Print to PDF</span></button>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>Course Code</th>
+                      <th>Course Name</th>
+                      <th>Unit</th>
+                      <th>Level</th>
+                      <th>Department</th>
+                      <th>Registration Status</th>
+                    </tr>
+                  </thead>
+                  <tfoot>
+                    <tr>
+                      <th>Course Code</th>
+                      <th>Course Name</th>
+                      <th>Unit</th>
+                      <th>Level</th>
+                      <th>Department</th>
+                      <th>Registration Status</th>
+                    </tr>
+                  </tfoot>
+                  <tbody>
+                  {% for Course in course_reg %}
+                  {% for Registered_course in added %}
+                  {% if Registered_course.reg_course_short in Course.course_short %}
+                  
+                    <tr>
+                
+                 <td>{{ Course.course_short }}</td>
+                
+                      <td >{{ Course.course_full }}</td>
+                      
+                      <td >{{ Course.unit }}</td>
+                     
+                      <td>{{ Course.level }}</td>
+                      <td>{{ Course.department }}</td>
+                      <td>Registered<span class="btn btn-success btn-circle btn-sm">
+                    <i class="fas fa-check"></i> 
+                  </span></td> 
+
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+      <!-- Footer -->
+      <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+          <div class="copyright text-center my-auto">
+            <span>Copyright &copy; Olusola 2020</span>
+          </div>
+        </div>
+      </footer>
+      <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+  <!-- Logout Modal-->
+
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+
+  <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
+
+  <script type="text/javascript">
+    $(document).ready( function () {
+    $('#dataTable').DataTable();
+} );
+  </script>
+
+
+  <!-- you need to include the shieldui css and js assets in order for the components to work -->
+<link rel="stylesheet" type="text/css" href="http://www.shieldui.com/shared/components/latest/css/light/all.min.css" />
+<script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
+<script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/jszip.min.js"></script>
+
+<script type="text/javascript">
+    jQuery(function ($) {
+        $("#toPDF").click(function () {
+            // parse the HTML table element having an id=exportTable
+            var dataSource = shield.DataSource.create({
+                data: "#dataTable",
+                schema: {
+                    type: "table",
+                    fields: {
+                        "Course Code": { type: String },
+                        "Course Name": { type: String },
+                        Unit: { type: Number },
+                        Level: { type: String },
+                        Department: { type: String },
+                        "Registration Status": { type: String }
+                    }
+                }
+            });
+
+            // when parsing is done, export the data to PDF
+            dataSource.read().then(function (data) {
+                var pdf = new shield.exp.PDFDocument({
+                    author: "OluSOLA",
+                    created: new Date()
+                });
+
+                pdf.addPage("a4", "landscape");
+
+                pdf.table(
+                    50,
+                    50,
+                    data,
+                    [
+                        { field: "Course Code", title: "Course Code", width: 50 },
+                        { field: "Course Name", title: "Course Name", width: 200 },
+                        { field: "Unit", title: "Unit", width: 50 },
+                        { field: "Level", title: "Level", width: 50 },
+                        { field: "Department", title: "Department", width: 200 },
+                        { field: "Registration Status", title: "Registration Status", width: 200 }
+                    ],
+                    {
+                        margins: {
+                            top: 50,
+                            left: 50
+                        }
+                    }
+                );
+
+                pdf.saveAs({
+                    fileName: "SchoolIOPDF"
+                });
+            });
+        });
+    });
+</script>
+
+</body>
+
+</html>
